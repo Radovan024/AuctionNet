@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -33,3 +34,11 @@ Route::post('/login', function (Request $request) {
     }
 });
 
+Route::post('/create', function (Request $request) {
+    return Post::create([
+        'naslov' => $request['naslov'],
+        'opis' => $request['opis'],
+        'pocetnaCena' => $request['pocetnaCena'],
+        'userId' => $request['userId'],
+    ]);
+});

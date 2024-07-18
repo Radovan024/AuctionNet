@@ -14,5 +14,6 @@ class Post extends Model
         'opis',
         'pocetnaCena',
         'userId',
+        'slika',
     ];
 }

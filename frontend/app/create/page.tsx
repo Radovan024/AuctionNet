@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 export default function Create() {
     const [naslov, setNaslov] = useState('');
     const [opis, setOpis] = useState('');
+    const [slika, setSlika] = useState(null); // Novo stanje za sliku
     const [pocetnaCena, setPocetnaCena] = useState('');
     const [userId, setUserId] = useState('');
 
@@ -21,20 +22,17 @@ export default function Create() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const data = {
-            naslov,
-            opis,
-            pocetnaCena,
-            userId,
-        };
+        const formData = new FormData();
+        formData.append('naslov', naslov);
+        formData.append('opis', opis);
+        formData.append('slika', slika); // Dodavanje slike u FormData
+        formData.append('pocetnaCena', pocetnaCena);
+        formData.append('userId', userId);
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/create', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                body: formData,
             });
 
             if (response.ok) {
@@ -62,6 +60,12 @@ export default function Create() {
                     <label>
                         Opis:
                         <input type="text" value={opis} onChange={(e) => setOpis(e.target.value)} />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Slika:
+                        <input type="file" onChange={(e) => setSlika(e.target.files[0])} />
                     </label>
                 </div>
                 <div>

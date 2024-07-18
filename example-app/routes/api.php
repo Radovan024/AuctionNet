@@ -35,10 +35,36 @@ Route::post('/login', function (Request $request) {
 });
 
 Route::post('/create', function (Request $request) {
-    return Post::create([
+    // Validacija podataka
+    $request->validate([
+        'naslov' => 'required|string|max:255',
+        'opis' => 'required|string',
+        'slika' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validacija za slike
+        'pocetnaCena' => 'required|numeric',
+        'userId' => 'required|integer',
+    ]);
+
+    // Upload slike
+    $path = $request->file('slika')->store('slike', 'public'); // Čuva u storage/app/public/slike
+
+    // Kreiranje posta sa putanjom do slike
+    $post = Post::create([
         'naslov' => $request['naslov'],
         'opis' => $request['opis'],
+        'slika' => $path,
         'pocetnaCena' => $request['pocetnaCena'],
         'userId' => $request['userId'],
     ]);
+
+    return $post;
+});
+
+Route::get('/get/{id}', function ($id) {
+    $post = Post::find($id);
+
+    if (!$post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+
+    return response()->json($post);
 });
